@@ -1,0 +1,49 @@
+schema_version: 1
+
+context:
+  name: pydpc
+  version: "0.2.1"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/pydpc-${{ version }}.tar.gz
+  sha256: 168c953d2656c73562e1fde5e9935db354669a37a91a38537c4dce5266b9f280
+
+build:
+  number: 1
+  skip: match(python, "<3.12")
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ stdlib("c") }}
+  host:
+    - python
+    - numpy >=1.7
+    - cython >=0.20
+    - setuptools >=0.6
+    - pip
+  run:
+    - numpy >=2
+    - python
+    - matplotlib-base
+
+tests:
+  - python:
+      imports:
+        - pydpc
+      pip_check: true
+
+about:
+  summary: Python package for Density Peak-based Clustering
+  license: LGPL-3.0-or-later
+  license_file: LICENSE
+  homepage: https://github.com/cwehmeyer/pydpc
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
